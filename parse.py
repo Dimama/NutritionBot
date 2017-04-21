@@ -1,3 +1,4 @@
+# Парсинг таблицы с сайта
 from bs4 import BeautifulSoup
 import requests
 
@@ -6,7 +7,7 @@ URL = 'http://snow-motion.ru/tablica-bzhu-kalorijnost'
 
 
 def get_html(url):
-    r = requests.get(URL)
+    r = requests.get(url)
     soup = BeautifulSoup(r.text, "lxml")
 
     return soup.prettify()
