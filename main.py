@@ -1,6 +1,7 @@
 from config import token
 import telebot
 import const
+from handler import Handler
 
 bot = telebot.TeleBot(token)
 
@@ -14,13 +15,15 @@ def handle_command(message):
     user_markup.row('Помощь')
     bot.send_message(message.from_user.id, "Список доступных команд", reply_markup=user_markup)
 
+
 @bot.message_handler()
 def handle_command(message):
     if message.text in const.info_dict.keys():
         handler = const.info_dict.get(message.text)
         answer = handler()
     else:
-        answer = "Я не знаю такой команды :("
+        answer = Handler.filter_request(message)
+        #answer = "Я не знаю такой команды :("
 
     bot.send_message(message.chat.id, answer)
 
