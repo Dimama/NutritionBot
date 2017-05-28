@@ -1,5 +1,8 @@
 from handler import Handler
 
+DB_NAME = "nutritionDB.sqlite"
+FILE_TABLE = "food.txt"
+
 info_dict = {
     "Статистика за день": Handler.stat_by_day_info,
     "за период": Handler.stat_by_period_info,
