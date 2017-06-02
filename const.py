@@ -1,8 +1,5 @@
 from handler import Handler
 
-DB_NAME = "nutritionDB.sqlite"
-FILE_TABLE = "food.txt"
-
 info_dict = {
     "Статистика за день": Handler.stat_by_day_info,
     "за период": Handler.stat_by_period_info,
@@ -12,7 +9,7 @@ info_dict = {
 }
 
 reg_exp_dict = {
-    "user data": r'\s*[мМжЖ], [1-9]{1}[0-9]{,2}, [1-9]{1}[0-9]{,2}, [1-9]{1}[0-9]{,2}\s*$',
+    "user data": r'\s*[мМжЖ],\s*[1-9]{1}[0-9]{,2},\s*[1-9]{1}[0-9]{,2},\s*[1-9]{1}[0-9]{,2}\s*$',
     "product": r'\s*[\w,\s]+\s+-\s+[1-9]{1}[0-9]{,5}\s*$',
     "day": r'\s*[0-9]{2}\.[0-9]{2}\.[0-9]{4}\s*$',
     "period": r'\s*[0-9]{2}\.[0-9]{2}\.[0-9]{4}\s*-'
