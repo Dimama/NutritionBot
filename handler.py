@@ -117,7 +117,7 @@ class Handler(object):
         data = message.text.strip().split(':')
 
         try:
-            product = data[0].strip()
+            product = (data[0].strip()[0].upper() + data[0].strip()[1:])
             mass = int(data[1])
         except ValueError:
             return const.error_emoji + " Ошибка обработки данных. Повторите ввод."
