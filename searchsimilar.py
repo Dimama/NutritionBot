@@ -1,19 +1,19 @@
 class SimilarSearcher(object):
-    """ Класс для поиска похожих наименований в списке"""
-    def __init__(self, words):
-        self.words = words
+    """ Класс для поиска похожих продуктов в списке"""
+    def __init__(self, products):
+        self.products = products
 
     def search_similar(self, word):
-        similar_words = []
-        for target in self.words:
-            if SimilarSearcher.is_similar(target, word):
-                similar_words.append(target)
-        return similar_words
+        similar_products = []
+        for target in self.products:
+            if SimilarSearcher.is_similar(target[1], word):
+                similar_products.append(target)
+        return similar_products
 
     @staticmethod
     def is_similar(target, word):
         parts = word.split(" ")
         for part in parts:
-            if part.strip().lower() in target.lower():
+            if part.strip().lower() in target.lower().split(' '):
                 return True
         return False
