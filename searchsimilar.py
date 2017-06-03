@@ -14,6 +14,6 @@ class SimilarSearcher(object):
     def is_similar(target, word):
         parts = word.split(" ")
         for part in parts:
-            if part.strip().lower() in target.lower().split(' '):
+            if part.strip().lower() in target.lower().split(' ') and part.strip().lower() not in ["в", "на", "из", "с"]:
                 return True
         return False
