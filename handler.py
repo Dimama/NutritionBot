@@ -2,7 +2,7 @@ from config import mail
 import re
 import datetime
 import const
-import dbhelper
+from dbhelper import DBHelper
 
 
 class Handler(object):
@@ -12,7 +12,9 @@ class Handler(object):
     def add_product_info():
         """ Обработка команды  'Добавить продукт' """
         answer = "Введите информацию в формате:\n" \
-                 "продукт : масса(грамм)"
+                 "продукт: масса(грамм)\n" \
+                 "или\n" \
+                 "№ продукта(*№): масса(грамм)"
         return answer
 
     @staticmethod
@@ -52,15 +54,18 @@ class Handler(object):
 
         if Handler.valid_text(const.reg_exp_dict["user data"], message.text):
             answer = Handler.set_update_user_data(message)
-        elif Handler.valid_text(const.reg_exp_dict["product"], message.text):
-            answer = Handler.add_product(message)
+        elif Handler.valid_text(const.reg_exp_dict["product_by_name"], message.text):
+            answer = Handler.add_product_by_name(message)
+        elif Handler.valid_text(const.reg_exp_dict["product_by_id"], message.text):
+            answer = Handler.add_product_by_id(message)
         elif Handler.valid_text(const.reg_exp_dict["day"], message.text):
             answer = Handler.stat_day(message)
         elif Handler.valid_text(const.reg_exp_dict["period"], message.text):
             answer = Handler.stat_period(message)
         else:
-            answer = "Я не знаю такой команды :("
-
+            answer = "Я не знаю такой команды :(\n" \
+                     "Нажмите 'Помощь' для получения всей информации" \
+                     " или нажмите на кнопку команды для получения информации о ней"
         return answer
 
     @staticmethod
@@ -106,13 +111,13 @@ class Handler(object):
             "weight": weight
         }
 
-        db = dbhelper.DBHelper()
+        db = DBHelper()
         answer = db.set_update_user_data(data)
 
         return answer
 
     @staticmethod
-    def add_product(message):
+    def add_product_by_name(message):
         """ Метод для выделения данных о продукте, их проверки и выполнения запроса к БД"""
         data = message.text.strip().split(':')
 
@@ -127,8 +132,41 @@ class Handler(object):
                      "Максимальная масса продукта: {0} грамм".format(const.MAX_PRODUCT_MASS)
 
         # Запрос к базе данных
+        data = {
+            "id": message.chat.id,
+            "product_name": product,
+            "product_id": None,
+            "mass": mass
+        }
+        db = DBHelper()
+        answer = db.add_product(data)
 
-        answer = "Продукт: {0}, масса: {1}".format(product, mass)
+        return answer
+
+    @staticmethod
+    def add_product_by_id(message):
+        """ Метод для выделения данных о продукте, их проверки и выполнения запроса к БД"""
+        data = message.text.strip().split(':')
+
+        try:
+            id = int(data[0][1:])
+            mass = int(data[1])
+        except ValueError:
+            return const.error_emoji + " Ошибка обработки данных. Повторите ввод."
+
+        if mass > const.MAX_PRODUCT_MASS:
+            return const.error_emoji + " Введены некорректные данные.\n" \
+                                       "Максимальная масса продукта: {0} грамм".format(const.MAX_PRODUCT_MASS)
+
+        # Запрос к базе данных
+        data = {
+            "id": message.chat.id,
+            "product_name": None,
+            "product_id": id,
+            "mass": mass
+        }
+        db = DBHelper()
+        answer = db.add_product(data, by_id=True)
 
         return answer
 
@@ -163,6 +201,7 @@ class Handler(object):
             return const.error_emoji + " Введена некорректная дата."
 
         # Запрос к базе данных
+
 
         answer = "{0} - {1} - {2}".format(day, month, year)
 
