@@ -12,7 +12,7 @@ class Handler(object):
     def add_product_info():
         """ Обработка команды  'Добавить продукт' """
         answer = "Введите информацию в формате:\n" \
-                 "продукт - масса(грамм)"
+                 "продукт : масса(грамм)"
         return answer
 
     @staticmethod
@@ -114,10 +114,10 @@ class Handler(object):
     @staticmethod
     def add_product(message):
         """ Метод для выделения данных о продукте, их проверки и выполнения запроса к БД"""
-        data = message.text.strip().split('-')
+        data = message.text.strip().split(':')
 
         try:
-            product = data[0].replace(' ', '')
+            product = data[0].strip()
             mass = int(data[1])
         except ValueError:
             return const.error_emoji + " Ошибка обработки данных. Повторите ввод."
