@@ -1,8 +1,9 @@
-import dbhelper
 from config import mail
-import const
 import re
 import datetime
+import const
+import dbhelper
+
 
 class Handler(object):
     """ Класс для обработки сообщений пользователя"""
@@ -95,7 +96,18 @@ class Handler(object):
 
         # Запрос к базе данных
 
-        answer = "Пол: {0}, Возраст: {1}, Рост: {2}, Вес: {3}".format(sex, age, height, weight)
+        data = {
+            "id": message.chat.id,
+            "first_name":  message.from_user.first_name,
+            "second_name": message.from_user.last_name,
+            "sex": sex,
+            "age": age,
+            "height": height,
+            "weight": weight
+        }
+
+        db = dbhelper.DBHelper()
+        answer = db.set_update_user_data(data)
 
         return answer
 
@@ -162,7 +174,6 @@ class Handler(object):
 
         data = message.text.split('-')
         date1, date2 = data[0].split('.'), data[1].split('.')
-
 
         try:
             day1, day2 = int(date1[0]), int(date2[0])
