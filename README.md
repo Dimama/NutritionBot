@@ -1,7 +1,7 @@
 # NutritionBot
 Nutrition assistant Bot for Telegram
 
-[Добавить бот в Telegram](@NutritionHelp_bot)
+Ссылка: @NutritionHelp_bot
 
 ### Coming soon:
 - Кнопка "Статистика за сегодня"
