@@ -1,11 +1,11 @@
-from handler import Handler
+from answerer import Answerer
 
 info_dict = {
-    "Статистика за день": Handler.stat_by_day_info,
-    "за период": Handler.stat_by_period_info,
-    "Добавить продукт": Handler.add_product_info,
-    "Ввести/Обновить личные данные": Handler.set_update_data_info,
-    "Помощь": Handler.instruction_info,
+    "Статистика за день": Answerer.stat_by_day_info,
+    "за период": Answerer.stat_by_period_info,
+    "Добавить продукт": Answerer.add_product_info,
+    "Ввести/Обновить личные данные": Answerer.set_update_data_info,
+    "Помощь": Answerer.bot_info,
 }
 
 reg_exp_dict = {
@@ -23,3 +23,7 @@ MAX_WEIGHT = 300
 MAX_PRODUCT_MASS = 10000
 
 error_emoji = u'\U00002757'
+sad_emoji = u'\U0001F614'
+success_emoji = u'\U00002705'
+pencil_emoji = u'\U0000270F'
+warning_emoji = u'\U000026A0'

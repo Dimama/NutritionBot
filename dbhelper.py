@@ -61,9 +61,9 @@ class DBHelper(object):
                                                                                 produсt[3], produсt[4], produсt[5])
                         cursor.execute(dbquery.insert_product_into_journal_by_id % str(data["id"]),
                                        (data["product_id"], mass, protein, fat, carbs, calories))
-                        answer = "Запись добавлена."
+                        answer = Answerer.success_adding()
                     else:
-                        answer = "Продукт с таким номером не найден."
+                        answer = Answerer.no_product_id()
 
                 else:
                     cursor.execute(dbquery.select_product_info_by_name, (data["product_name"],))
@@ -75,7 +75,7 @@ class DBHelper(object):
                                                                                        produсt[4], produсt[5])
                         cursor.execute(dbquery.insert_product_into_journal_by_name % str(data["id"]),
                                        (data["product_name"], mass, protein, fat, carbs, calories))
-                        answer = "Запись добавлена."
+                        answer = Answerer.success_adding()
                     else:
                         cursor.execute(dbquery.select_all_products)
                         produсts = cursor.fetchall()
@@ -86,22 +86,16 @@ class DBHelper(object):
                         else:
                             answer = Answerer.no_product()
             else:
-                answer = "Введите персональные данные!"
+                answer = Answerer.no_user_data()
 
         except sqlite3.DatabaseError as err:
             print("ERROR: ", err)
-            answer = "Возникла ошибка при добавлении данных. Повторите ввод."
+            answer = Answerer.db_error()
         else:
             self.conn.commit()
 
         self.conn.close()
         return answer
-
-    def get_stat_day(self, data):
-        pass
-
-    def get_stat_period(self, data):
-        pass
 
     def set_update_user_data(self, data):
         """ Обновление/ добавление данных пользователя в БД"""
@@ -114,19 +108,25 @@ class DBHelper(object):
 
                 cursor.execute(dbquery.update_user,
                                (data["sex"], data["age"], data["height"], data["weight"], data["id"]))
-                answer = "Данные успешно обновлены."
+                answer = Answerer.success_updating()
 
             else:
                 cursor.execute(dbquery.add_user, (data["id"], data["first_name"], data["second_name"],
                                                   data["sex"], data["age"], data["height"], data["weight"]))
                 cursor.execute(dbquery.create_user_journal % ("journal_" + str(data["id"])))
-                answer = "Данные успешно добавлены."
+                answer = Answerer.success_adding()
 
         except sqlite3.DatabaseError as err:
             print("ERROR: ", err)
-            answer = "Возникла ошибка при добавлении данных. Повторите ввод."
+            answer = Answerer.db_error()
         else:
             self.conn.commit()
 
         self.conn.close()
         return answer
+
+    def get_stat_day(self, data):
+        pass
+
+    def get_stat_period(self, data):
+        pass

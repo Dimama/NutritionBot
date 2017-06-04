@@ -2,6 +2,8 @@ from config import token
 import telebot
 import const
 from handler import Handler
+import dbhelper
+from answerer import Answerer
 
 bot = telebot.TeleBot(token)
 
@@ -13,7 +15,7 @@ def handle_command(message):
     user_markup.row('Добавить продукт')
     user_markup.row('Ввести/Обновить личные данные')
     user_markup.row('Помощь')
-    bot.send_message(message.from_user.id, "Список доступных команд", reply_markup=user_markup)
+    bot.send_message(message.from_user.id, Answerer.bot_info(), reply_markup=user_markup)
 
 
 @bot.message_handler()
@@ -23,12 +25,14 @@ def handle_command(message):
         answer = handler()
     else:
         answer = Handler.filter_request(message)
-        #answer = "Я не знаю такой команды :("
 
+    print(message.text)
     bot.send_message(message.chat.id, answer)
 
 
 def main():
+    db = dbhelper.DBHelper()
+    db.setup()
     bot.polling(none_stop=True, interval=0)
 
 if __name__ == "__main__":
