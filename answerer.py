@@ -18,6 +18,10 @@ class Answerer(object):
         return "За этот день информация о съеденной пище отсутствует."
 
     @staticmethod
+    def no_product_at_period():
+        return "За этот период информация о съеденной пище отсутствует."
+
+    @staticmethod
     def similar_products(products):
         answer = const.sad_emoji + " К сожалению, такого продукта нет в базе.\n" \
                  "Возможно, Вы имели в виду:"
@@ -57,6 +61,20 @@ class Answerer(object):
                   calories[3] + " | " + protein[3] + " | " + fat[3] + " | " + carbs[3]
         answer += "\n " + const.biceps_emoji + const.bycyclist_emoji + "  " +\
                   calories[4] + " | " + protein[4] + " | " + fat[4] + " | " + carbs[4]
+        return answer
+
+    @staticmethod
+    def stat_by_period(days):
+        answer = ""
+        if len(days) > 100:
+            answer += "Показаны последние 100 дней\n"
+            days = days[-100:]
+        answer += const.diagram_emoji + " Статистика за период " + const.calendar_emoji\
+                  + "\nДата:\nКкал | Белки(г) | Жиры(г) | Углеводы(г)"
+        for day in days:
+            nums = day[0].split('-')
+            answer += "\n" + nums[2] + "." + nums[1] + "." + nums[0][2:] + ":\n" + str(round(day[4], 1)) + " | " + \
+                      str(round(day[1], 1)) + " | " + str(round(day[2], 1)) + " | " + str(round(day[3], 1))
         return answer
 
     @staticmethod

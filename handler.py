@@ -55,7 +55,7 @@ class Handler(object):
             return Answerer.incorrect_data() + Answerer.max_weight()
 
         data = {
-            "id": message.chat.id,
+            "id": message.from_user.id,
             "first_name":  message.from_user.first_name,
             "second_name": message.from_user.last_name,
             "sex": sex,
@@ -84,7 +84,7 @@ class Handler(object):
             return Answerer.incorrect_data() + Answerer.max_product_mass()
 
         data = {
-            "id": message.chat.id,
+            "id": message.from_user.id,
             "product_name": product,
             "product_id": None,
             "mass": mass
@@ -110,7 +110,7 @@ class Handler(object):
 
         # Запрос к базе данных
         data = {
-            "id": message.chat.id,
+            "id": message.from_user.id,
             "product_name": None,
             "product_id": id,
             "mass": mass
@@ -179,8 +179,11 @@ class Handler(object):
         if not(datetime.date(year1, month1, day1) < datetime.date(year2, month2, day2)):
             return Answerer.incorrect_period()
 
-        # Запрос к базе данных
-
-        answer = "{0} - {1} - {2} :  {3} - {4} - {5}".format(day1, month1, year1, day2, month2, year2)
-
+        data = {
+            "id": message.from_user.id,
+            "date1": date1[2] + "-" + date1[1] + "-" + date1[0],
+            "date2": date2[2] + "-" + date2[1] + "-" + date2[0]
+        }
+        db = DBHelper()
+        answer = db.get_stat_period(data)
         return answer

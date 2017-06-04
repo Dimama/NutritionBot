@@ -158,4 +158,31 @@ class DBHelper(object):
         return answer
 
     def get_stat_period(self, data):
-        pass
+        """ Запрос к БД на получение статистики за период"""
+        try:
+            cursor = self.conn.cursor()
+
+            cursor.execute(dbquery.select_user, (data["id"],))
+            user = cursor.fetchone()
+            if user:
+                print(data["date1"])
+                print(data["date2"])
+                cursor.execute(dbquery.select_energy_by_period % str(data["id"]), (data["date1"], data["date2"]))
+
+                days = cursor.fetchall()
+                print(days)
+                if days:
+                    answer = Answerer.stat_by_period(days)
+                else:
+                    answer = Answerer.no_product_at_period()
+            else:
+                answer = Answerer.no_user_data()
+
+        except sqlite3.DatabaseError as err:
+            print("ERROR: ", err)
+            answer = Answerer.db_error()
+        else:
+            self.conn.commit()
+
+        self.conn.close()
+        return answer
