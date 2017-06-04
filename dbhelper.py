@@ -126,7 +126,36 @@ class DBHelper(object):
         return answer
 
     def get_stat_day(self, data):
-        pass
+        """ Запрос к БД на получение статистики за день"""
+        try:
+            cursor = self.conn.cursor()
+
+            cursor.execute(dbquery.select_user, (data["id"],))
+            user = cursor.fetchone()
+            if user:
+                date = data["date"]
+                id = str(data["id"])
+                cursor.execute(dbquery.select_products_by_day % (id, id), (date, ))
+                products = cursor.fetchall()
+                if products:
+                    cursor.execute(dbquery.select_sum_energy_by_day % id, (date,))
+                    sum_energy = cursor.fetchone()
+                    cl = Calculator(user[3], user[4], user[5], user[6])
+                    bx = cl.calc_BX()
+                    answer = Answerer.stat_by_day(products, sum_energy, bx)
+                else:
+                    answer = Answerer.no_product_at_day()
+            else:
+                answer = Answerer.no_user_data()
+
+        except sqlite3.DatabaseError as err:
+            print("ERROR: ", err)
+            answer = Answerer.db_error()
+        else:
+            self.conn.commit()
+
+        self.conn.close()
+        return answer
 
     def get_stat_period(self, data):
         pass

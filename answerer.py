@@ -14,14 +14,49 @@ class Answerer(object):
         return const.sad_emoji + " Продукт с таким номером не найден."
 
     @staticmethod
+    def no_product_at_day():
+        return "За этот день информация о съеденной пище отсутствует."
+
+    @staticmethod
     def similar_products(products):
         answer = const.sad_emoji + " К сожалению, такого продукта нет в базе.\n" \
-                 "Возможно Вы имели в виду:"
+                 "Возможно, Вы имели в виду:"
 
         for product in products:
             answer += "\n *" + str(product[0]) + " - " + product[1]
         answer += "\n----------------\nВведите инофрмацию о продукте в формате:\n*номер : масса(грамм)"
 
+        return answer
+
+    @staticmethod
+    def stat_by_day(products, sum_energy, bx):
+        """ Выдача статистики за день"""
+        answer = "Съеденные продукты:"
+        for product in products:
+            answer += " \n" + product[0] + " : " + str(product[1]) + " г"
+        answer += "\n" + "-"*20
+        answer += "\nВсего:" + "\nКкал: " + str(round(sum_energy[3], 1)) + "\nБелков(Б): " + str(round(sum_energy[0], 1)) \
+                  + " г" + "\nЖиров(Ж): " + str(round(sum_energy[1], 1)) \
+                  + " г" + "\nУглеводов(У): " + str(round(sum_energy[2], 1)) + " г"
+        answer += "\n" + "-" * 20
+
+        calories = list(map(lambda x: str(round(x, 1)), bx["calories"]))
+        protein = list(map(lambda x: str(round(x, 1)), bx["protein"]))
+        fat = list(map(lambda x: str(round(x, 1)), bx["fat"]))
+        carbs = list(map(lambda x: str(round(x, 1)), bx["carbs"]))
+
+        answer += "\nРекомендованные для Вас нормы в зависимости от уровня физ. активности\n"
+        answer += "              Ккал   Б(г)   Ж(г)   У(г)"
+        answer += "\n " + const.moon_emoji + const.sleep_emoji + "  " +\
+                   calories[0] + " | " + protein[0] + " | " + fat[0] + " | " + carbs[0]
+        answer += "\n " + const.study_emoji + const.computer_emoji + "  " +\
+                  calories[1] + " | " + protein[1] + " | " + fat[1] + " | " + carbs[1]
+        answer += "\n " + const.policeman_emoji + const.haircut_emoji + "  " +\
+                  calories[2] + " | " + protein[2] + " | " + fat[2] + " | " + carbs[2]
+        answer += "\n " + const.tractor_emoji + const.wrench_emoji + "  " +\
+                  calories[3] + " | " + protein[3] + " | " + fat[3] + " | " + carbs[3]
+        answer += "\n " + const.biceps_emoji + const.bycyclist_emoji + "  " +\
+                  calories[4] + " | " + protein[4] + " | " + fat[4] + " | " + carbs[4]
         return answer
 
     @staticmethod
@@ -95,7 +130,7 @@ class Answerer(object):
 
     @staticmethod
     def incorrect_data():
-        return const.error_emoji + " Введены некорректные данные.\n" \
+        return const.error_emoji + " Введены некорректные данные.\n"
 
     @staticmethod
     def max_age():
@@ -107,7 +142,7 @@ class Answerer(object):
 
     @staticmethod
     def max_weight():
-        return Answerer.incorrect_data() + "Максимальный вес: {0} кг".format(const.MAX_WEIGHT)
+        return "Максимальный вес: {0} кг".format(const.MAX_WEIGHT)
 
     @staticmethod
     def max_product_mass():

@@ -150,10 +150,13 @@ class Handler(object):
         if not Handler.is_correct_day(day, month, year):
             return Answerer.incorrect_date()
 
-        # Запрос к базе данных
+        data = {
+            "id": message.from_user.id,
+            "date": data[2] + "-" + data[1] + "-" + data[0]
+        }
 
-        answer = "{0} - {1} - {2}".format(day, month, year)
-
+        db = DBHelper()
+        answer = db.get_stat_day(data)
         return answer
 
     @staticmethod
