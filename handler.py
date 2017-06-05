@@ -181,8 +181,8 @@ class Handler(object):
 
         data = {
             "id": message.from_user.id,
-            "date1": date1[2] + "-" + date1[1] + "-" + date1[0],
-            "date2": date2[2] + "-" + date2[1] + "-" + date2[0]
+            "date1": date1[2].strip() + "-" + date1[1] + "-" + date1[0],
+            "date2": date2[2] + "-" + date2[1] + "-" + date2[0].strip()
         }
         db = DBHelper()
         answer = db.get_stat_period(data)
