@@ -9,15 +9,19 @@ class Handler(object):
     """ Класс для обработки сообщений пользователя"""
 
     @staticmethod
-    def filter_request(message):
+    def filter_request(message): # pragma: no cover
         """ Определение запроса пользователя из текста сообщения """
 
         if Handler.valid_text(const.reg_exp_dict["user data"], message.text):
-            answer = Handler.set_update_user_data(message)
+            answer = Handler.set_update_user_data(message.text,
+                                                  message.from_user.id,
+                                                  message.from_user.first_name,
+                                                  message.from_user.last_name)
+
         elif Handler.valid_text(const.reg_exp_dict["product_by_name"], message.text):
-            answer = Handler.add_product_by_name(message)
+            answer = Handler.add_product_by_name(message.text, message.from_user.id)
         elif Handler.valid_text(const.reg_exp_dict["product_by_id"], message.text):
-            answer = Handler.add_product_by_id(message)
+            answer = Handler.add_product_by_id(message.text, message.from_user.id)
         elif Handler.valid_text(const.reg_exp_dict["day"], message.text):
             answer = Handler.stat_day(message)
         elif Handler.valid_text(const.reg_exp_dict["period"], message.text):
@@ -26,7 +30,7 @@ class Handler(object):
             answer = Answerer.unknow_command()
         return answer
 
-    @staticmethod
+    @staticmethod # pragma: no cover
     def valid_text(pattern, text):
         res = re.match(pattern, text)
         if res:
@@ -34,9 +38,9 @@ class Handler(object):
         return False
 
     @staticmethod
-    def set_update_user_data(message):
+    def set_update_user_data(text, id, first_name, last_name):
         """ Метод для выделения данных пользователя из сообщения, их проверки и выполнения запроса к БД"""
-        data = message.text.strip().split(',')
+        data = text.strip().split(',')
         try:
             sex = data[0].lower()
             age = int(data[1])
@@ -55,9 +59,9 @@ class Handler(object):
             return Answerer.incorrect_data() + Answerer.max_weight()
 
         data = {
-            "id": message.from_user.id,
-            "first_name":  message.from_user.first_name,
-            "second_name": message.from_user.last_name,
+            "id": id,
+            "first_name":  first_name,
+            "second_name": last_name,
             "sex": sex,
             "age": age,
             "height": height,
@@ -70,9 +74,9 @@ class Handler(object):
         return answer
 
     @staticmethod
-    def add_product_by_name(message):
+    def add_product_by_name(text, id):
         """ Метод для выделения данных о продукте, их проверки и выполнения запроса к БД"""
-        data = message.text.strip().split(':')
+        data = text.strip().split(':')
 
         try:
             product = (data[0].strip()[0].upper() + data[0].strip()[1:])
@@ -84,7 +88,7 @@ class Handler(object):
             return Answerer.incorrect_data() + Answerer.max_product_mass()
 
         data = {
-            "id": message.from_user.id,
+            "id": id,
             "product_name": product,
             "product_id": None,
             "mass": mass
@@ -95,12 +99,12 @@ class Handler(object):
         return answer
 
     @staticmethod
-    def add_product_by_id(message):
+    def add_product_by_id(text, id):
         """ Метод для выделения данных о продукте, их проверки и выполнения запроса к БД"""
-        data = message.text.strip().split(':')
+        data = text.strip().split(':')
 
         try:
-            id = int(data[0][1:])
+            product_id = int(data[0][1:])
             mass = int(data[1])
         except ValueError:
             return Answerer.data_processing_error()
@@ -110,9 +114,9 @@ class Handler(object):
 
         # Запрос к базе данных
         data = {
-            "id": message.from_user.id,
+            "id": id,
             "product_name": None,
-            "product_id": id,
+            "product_id": product_id,
             "mass": mass
         }
         db = DBHelper()
@@ -121,7 +125,7 @@ class Handler(object):
         return answer
 
     @staticmethod
-    def is_correct_day(day, month, year):
+    def is_correct_day(day, month, year): # pragma: no cover
         if day < 1 or day > 31 or month < 1 or month > 12:
             return False
 
@@ -135,7 +139,7 @@ class Handler(object):
 
 
     @staticmethod
-    def stat_day(message):
+    def stat_day(message): # pragma: no cover
         """ Метод для выделения даты из сообщения, ее проверки и выполнения запроса к БД """
 
         data = message.text.split('.')
@@ -160,7 +164,7 @@ class Handler(object):
         return answer
 
     @staticmethod
-    def stat_period(message):
+    def stat_period(message):  # pragma: no cover
         """ Метод для выделения интервала дат из сообщения, их проверки и выполнения запроса к БД """
 
         data = message.text.split('-')
