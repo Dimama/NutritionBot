@@ -6,7 +6,7 @@ from handler import Handler
 # Входные данные и ожидаемые результаты
 addUpdateUserData_in = ["@,20, 180,80", "М, 2567, 180, 80", "М, 20, 180, 80, 19",
                         "ж, 10, 20 ", "ж, 18, 160, 50", "  Ж,   20, 160, 55     "]
-addUpdateUserData_out = [False, False, False, False, True, True]
+addUpdateUserData_out = [False, False, False, False, False, True]
 
 addProductByName_in = ["Твор!ог: 150", "Курица: 1587076", "Яблоко: 75 896", "Творог","Творог 120",
                          "Творог :: 120", "Творог : 120", " Творог    :       120"]
@@ -51,5 +51,4 @@ class TestRegExp(unittest.TestCase):
 
 
 if __name__ == "__main__":
-    
     unittest.main()
