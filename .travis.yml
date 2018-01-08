@@ -1,11 +1,13 @@
 # Тут указывается используемый в проекте язык программирования, можно указать несколько
 language: python
 
+# Версия python
 python:
   - "3.5.2"
- 
+
+# Установка используемых пакетов
 install:
   - pip install -r requirements.txt
 
-# Команда для запуска тестов, в моем случае они запускаются именно так
-script: python -m unittest -v Tests/UnitTests/regexptests.py MainSystemTest.py
+# Команда для запуска тестов, в нашем случае они запускаются именно так
+script: python -m unittest -v Tests/UnitTests/regexptests.py
